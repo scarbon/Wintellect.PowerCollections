@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <!-- Static part of the version -->
+    <VersionPrefix>2.0</VersionPrefix>
+
+    <!-- Generate standard assembly attributes via SDK -->
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <!-- Legacy assembly metadata mapped to SDK properties -->
+      <Authors>Peter Golde</Authors>
+      <AssemblyTitle>Wintellect.PowerCollections</AssemblyTitle>
+    <AssemblyDescription>The Power Collections group of collection classes.</AssemblyDescription>
+    <Company>Wintellect</Company>
+    <Product>Power Collections</Product>
+
+    <!-- Unify assembly versioning with the computed MSBuild Version -->
+      <InformationalVersion>$(Version)</InformationalVersion>
+      <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+      <AssemblyVersion>$(Version)</AssemblyVersion>
+      <FileVersion>$(Version)</FileVersion>
+      <InformationalVersion>$(Version)</InformationalVersion>
+  </PropertyGroup>
+    
+</Project>

@@ -1,0 +1,66 @@
+﻿name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - '**'
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 9.0
+
+      - name: Authenticate with GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet nuget add source --username "${{ github.repository_owner }}" --password "$GITHUB_TOKEN" \
+           --store-password-in-clear-text --name "github" \
+          "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
+      - name: Determine Version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+              echo "version=0.0.0.$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+              version="${GITHUB_REF##*/}"
+              version_no_v="${version#v}"
+              echo "version=$version_no_v" >> $GITHUB_ENV
+          else
+              echo "version=0.0.0.$GITHUB_RUN_NUMBER-preview" >> $GITHUB_ENV
+          fi
+
+      - name: Restore dependencies
+        run: dotnet restore PowerCollections.sln
+
+      - name: Run tests
+        run: dotnet test PowerCollections.sln --no-restore --configuration Release --verbosity normal
+
+      - name: Build project
+        run: dotnet build PowerCollections.sln --no-restore --configuration Release /p:Version=${{env.version}}
+
+      - name: Pack project
+        run: dotnet pack ./src/PowerCollections/Wintellect.PowerCollections.csproj --no-build --configuration Release -o ./artifacts /p:PackageVersion=${{env.version}}
+
+      - name: Publish to GitHub Packages
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push ./artifacts/*.nupkg --source "github" --skip-duplicate

@@ -4,8 +4,10 @@
     <RootNamespace>Wintellect.PowerCollections</RootNamespace>
     <AssemblyName>PowerCollections</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>false</Deterministic>
+    <PackageId>Wintellect.PowerCollections</PackageId>
+    <Description>Wintellect PowerCollections for .NET</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Wintellect.PowerCollections.ruleset" />
