@@ -9,3 +9,9 @@ This library was originally produced by *Wintellect* and is offered AS IS. It ha
 
 ## Power Collections Documentation ##
 Please see the Releases page for updated documentation <http://www.codeplex.com/PowerCollections/Release/ProjectReleases.aspx>
+
+
+## Modernization note ## 
+- This fork targets .NET Standard 2.0 (netstandard2.0) instead of the legacy .NET Framework.
+- The test project has been updated to .NET 9 (net9.0).
+- Overall, this fork represents a modernized version of the original project, updated for current .NET tooling.
